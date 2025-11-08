@@ -4,59 +4,62 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const isWorkerConfigured = Boolean(WORKER_URL);
 
-/**
- * Send the conversation to the Cloudflare Worker and return its reply.
- * Falls back to a deterministic mock response when no Worker endpoint is provided yet.
- */
+const ASK_MUTATION = `
+  mutation Ask($question: String!, $messages: [MessageInput!]!) {
+    ask(question: $question, messages: $messages) {
+      reply
+    }
+  }
+`;
+
 export async function createAssistantReply(messages) {
   if (!isWorkerConfigured) {
-    await sleep(800);
+    await sleep(600);
     const lastUserMessage =
       [...messages].reverse().find((msg) => msg.role === 'user')?.content ||
       '（暂未输入内容）';
 
     return [
-      '这是一个占位回复，接入 Cloudflare Worker 后这里会替换成真正的 AI 回答。',
+      '当前处于本地模拟模式，尚未连接 GraphQL Worker。',
       '',
       '你刚刚提到：',
       lastUserMessage,
       '',
-      '提示：创建 .env 文件并配置 VITE_WORKER_API_URL 指向你的 Worker 接口，即可切换到真实接口。',
+      '提示：设置 VITE_WORKER_API_URL 指向你的 Cloudflare Worker 即可使用真实回复。',
     ].join('\n');
   }
 
   const latestUserInput =
     [...messages].reverse().find((msg) => msg.role === 'user')?.content || '';
 
-  const payload = {
+  const variables = {
     question: latestUserInput,
     messages: messages.map(({ role, content }) => ({ role, content })),
   };
 
   const response = await fetch(WORKER_URL, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query: ASK_MUTATION, variables }),
   });
 
   if (!response.ok) {
-    const errorText = await safeReadText(response);
-    throw new Error(`API 请求失败：${response.status} ${errorText}`);
+    const fallback = await safeReadText(response);
+    throw new Error(`GraphQL 接口错误：${response.status} ${fallback}`);
   }
 
-  const data = await safeReadJson(response);
-  const candidate =
-    data?.reply ||
-    data?.message ||
-    data?.choices?.[0]?.message?.content;
+  const result = await safeReadJson(response);
 
-  if (!candidate) {
-    throw new Error('API 响应中没有找到可用的回复内容');
+  if (result.errors?.length) {
+    throw new Error(result.errors[0]?.message || 'GraphQL 请求出错');
   }
 
-  return candidate.trim();
+  const reply = result?.data?.ask?.reply;
+  if (!reply) {
+    throw new Error('GraphQL 响应缺少 ask.reply 字段');
+  }
+
+  return String(reply).trim();
 }
 
 async function safeReadText(response) {

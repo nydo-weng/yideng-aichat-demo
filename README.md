@@ -20,18 +20,18 @@ npm run dev
 
 打开控制台输出的网址（默认 `http://localhost:5173`）即可体验。
 
-## 接入 Cloudflare Worker
+## 接入 Cloudflare Worker（GraphQL）
 
 1. 在项目根目录创建 `.env.local`
 2. 写入以下变量：
 
 ```bash
-VITE_WORKER_API_URL=https://your-worker.demo.workers.dev/chat
+VITE_WORKER_API_URL=https://your-worker.demo
 ```
 
 3. 重新运行 `npm run dev`，右上角状态标记会显示 `Worker API`
 
-> Worker 只需要接受 `POST` JSON 请求，入参中包含 `messages`（role/content）即可。Worker 返回 JSON，包含 `reply` 或 `message` 字段即可（可在 `src/services/chatClient.js` 中调整解析逻辑）。
+> Worker 需要接受 GraphQL `POST` 请求，body 结构为 `{ query, variables }`，其中 `query` 是 `mutation Ask($question: String!, $messages: [MessageInput!]!) { ask(...) { reply } }`，`variables` 中包含 `question` 与完整 `messages`。请在 Worker 中解析 GraphQL 并返回 `{ "data": { "ask": { "reply": "..." }}}` 结构。
 
 ## 目录结构
 
