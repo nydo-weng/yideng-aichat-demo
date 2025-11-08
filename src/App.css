@@ -24,10 +24,6 @@
 .chat-card__header {
   padding: 1.75rem 2rem 1.25rem;
   border-bottom: 1px solid rgba(148, 163, 184, 0.15);
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
 }
 
 .chat-card__title {
@@ -43,26 +39,21 @@
   font-size: 0.95rem;
 }
 
-.status-chip {
+.tech-badges {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.tech-badge {
   padding: 0.35rem 0.9rem;
   border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border: 1px solid transparent;
-}
-
-.status-live {
-  background: rgba(34, 197, 94, 0.15);
-  border-color: rgba(34, 197, 94, 0.5);
-  color: #4ade80;
-}
-
-.status-mock {
-  background: rgba(251, 191, 36, 0.12);
-  border-color: rgba(251, 191, 36, 0.4);
-  color: #fcd34d;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  color: #cbd5f5;
+  background: rgba(15, 23, 42, 0.6);
 }
 
 .message-list {

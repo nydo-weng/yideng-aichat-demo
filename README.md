@@ -7,6 +7,7 @@
 - ✅ 简洁单列对话框：保留必要的标题 + 消息列表 + 输入框
 - ✅ Dummy 接口：未配置 Worker 时自动返回占位内容，方便本地开发
 - ✅ 一键切换：配置 `VITE_WORKER_API_URL` 即可接入 Cloudflare Worker
+- ✅ GraphQL + Cloudflare Worker（Serverless）代理 DeepSeek 模型
 - ✅ UX 小细节：输入框回车发送、发送中动效、错误提示
 
 > 需求简单、无需后端，本项目完全运行在浏览器端；只要你有能直接调用的 AI 接口即可接入。

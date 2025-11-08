@@ -20,12 +20,12 @@ export async function createAssistantReply(messages) {
       '（暂未输入内容）';
 
     return [
-      '当前处于本地模拟模式，尚未连接 GraphQL Worker。',
+      '现在是本地 Demo 模式，暂未连上 Cloudflare Worker～',
       '',
-      '你刚刚提到：',
+      '你刚刚说的是：',
       lastUserMessage,
       '',
-      '提示：设置 VITE_WORKER_API_URL 指向你的 Cloudflare Worker 即可使用真实回复。',
+      '把 VITE_WORKER_API_URL 配成你的 Worker 地址就能和 DeepSeek 真正开聊啦 🚀',
     ].join('\n');
   }
 

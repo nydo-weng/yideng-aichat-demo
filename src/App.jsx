@@ -7,7 +7,7 @@ const initialMessages = [
     id: 'welcome',
     role: 'assistant',
     content:
-      '你好，我是你的 AI 助手，已经准备好随时对话。直接开始输入你的问题吧！',
+      '嘿！我是你的 AI 搭子，灵感、翻译、写文案都可以找我，随手发个问题试试吧 ✨',
   },
 ]
 
@@ -80,17 +80,17 @@ function App() {
             <p className="chat-card__title">AI Chat</p>
             <p className="chat-card__subtitle">
               {isWorkerConfigured
-                ? '通过 Cloudflare Worker 与模型对话'
-                : '当前为本地示例回复，仅用于界面预览'}
+                ? 'GraphQL · Cloudflare Worker (Serverless) · DeepSeek'
+                : 'GraphQL 接口未连接，当前为本地示例回复'}
             </p>
+            <div className="tech-badges">
+              <span className="tech-badge">GraphQL Endpoint</span>
+              <span className="tech-badge">
+                {isWorkerConfigured ? 'Cloudflare Worker' : 'Mock Runtime'}
+              </span>
+              <span className="tech-badge">DeepSeek Model</span>
+            </div>
           </div>
-          <span
-            className={`status-chip ${
-              isWorkerConfigured ? 'status-live' : 'status-mock'
-            }`}
-          >
-            {isWorkerConfigured ? 'Worker API' : 'Mock'}
-          </span>
         </header>
 
         <section className="message-list">
@@ -130,7 +130,7 @@ function App() {
         <footer className="composer">
           <textarea
             value={inputValue}
-            placeholder="向 AI 提问，例如：帮我写一份市场调研大纲..."
+            placeholder="说点什么吧：例如“帮我写个炸裂的新品文案”或“用 3 句话解释 GraphQL”"
             onChange={(event) => setInputValue(event.target.value)}
             onKeyDown={handleKeyDown}
             disabled={isSending}
